@@ -1322,41 +1322,54 @@ with tab1:
         except Exception as e:
             st.error(f"Erreur Hovmöller : {e}")
 
-        # Corrélation locale
-        st.markdown("### 🔗 Corrélation locale")
+       # ---------------------------------------------
+with tab3:
+    # --- autres éléments des analyses avancées (profil vertical, Hovmöller, etc.) ---
 
-        var_corr = st.selectbox(
-            "Variable avec laquelle corréler",
-            VALID_VARS,
-            format_func=lambda k: VARIABLE_NAMES[k]
-        )
+    # ---------------------------------------------
+    # Corrélation locale (uniquement dans Analyses avancées)
+    # ---------------------------------------------
+    st.markdown("### 🔗 Corrélation locale")
 
-        try:
-            da1 = dataset[selected_var]
-            da2 = dataset[var_corr]
+    var_corr = st.selectbox(
+        "Variable avec laquelle corréler",
+        VALID_VARS,
+        format_func=lambda k: VARIABLE_NAMES[k]
+    )
 
-            if "isobaricInhPa" in da1.dims and pressure_level is not None:
-                da1 = da1.sel(isobaricInhPa=pressure_level)
+    try:
+        da1 = dataset[selected_var]
+        da2 = dataset[var_corr]
 
-            if "isobaricInhPa" in da2.dims and pressure_level is not None:
-                da2 = da2.sel(isobaricInhPa=pressure_level)
+        # Gestion du niveau de pression si nécessaire
+        if "isobaricInhPa" in da1.dims and pressure_level is not None:
+            da1 = da1.sel(isobaricInhPa=pressure_level)
 
-            corr_vals = []
-            for la, lo in zip(df.lat, df.lon):
-                ts1 = da1.sel(latitude=la, longitude=lo, method="nearest").values
-                ts2 = da2.sel(latitude=la, longitude=lo, method="nearest").values
+        if "isobaricInhPa" in da2.dims and pressure_level is not None:
+            da2 = da2.sel(isobaricInhPa=pressure_level)
 
-                if np.std(ts1) == 0 or np.std(ts2) == 0:
-                    corr_vals.append(np.nan)
-                else:
-                    corr_vals.append(np.corrcoef(ts1, ts2)[0, 1])
+        corr_vals = []
+        for la, lo in zip(df.lat, df.lon):
+            ts1 = da1.sel(latitude=la, longitude=lo, method="nearest").values
+            ts2 = da2.sel(latitude=la, longitude=lo, method="nearest").values
 
-            df_corr = pd.DataFrame({
-                "lat": df.lat,
-                "lon": df.lon,
-                "corr": corr_vals
-            }).dropna()
+            if np.std(ts1) == 0 or np.std(ts2) == 0:
+                corr_vals.append(np.nan)
+            else:
+                corr_vals.append(np.corrcoef(ts1, ts2)[0, 1])
 
+        df_corr = pd.DataFrame({
+            "lat": df.lat,
+            "lon": df.lon,
+            "corr": corr_vals
+        }).dropna()
+
+        if df_corr.empty:
+            st.info(
+                "La corrélation n’a pas pu être calculée pour cette combinaison de variables "
+                "(séries constantes ou filtres trop restrictifs). Essayez une autre variable."
+            )
+        else:
             base_layers_corr, map_style_corr = get_basemap_layers_and_style(
                 basemap, dark_mode
             )
@@ -1381,12 +1394,11 @@ with tab1:
 
             st.pydeck_chart(deck_corr, use_container_width=True)
 
-        except Exception as e:
-            st.error(f"Erreur corrélation : {e}")
-
-    # Fermeture de la carte glassmorphism
-    st.markdown('</div>', unsafe_allow_html=True)
-
+    except Exception:
+        st.info(
+            "La corrélation n’a pas pu être calculée pour cette combinaison de variables "
+            "(dimensions temporelles incompatibles ou séries constantes). Essayez une autre variable."
+        )
 # ---------------------------------------------
 # LANCEMENT DE L'ANIMATION SI ACTIVE
 # ---------------------------------------------
