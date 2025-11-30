@@ -510,7 +510,7 @@ def load_dataset(path):
 def show_landing():
     st.markdown(
         f"""
-        <div style="min-height: 75vh; display: flex; align-items: flex-start; justify-content: center; padding-top: 3vh;">
+        <div style="min-height: 75vh; display: flex; align-items: flex-start; justify-content: center; padding-top: 2vh;">
             <div style="max-width: 850px; width: 90%; border-radius: 26px;
                         padding: 2px;
                         background: linear-gradient(135deg, #7b2ff7, #f953c6, #fdee88);
@@ -562,7 +562,9 @@ def show_landing():
         unsafe_allow_html=True
     )
 
-    st.markdown("")
+    # ❌ ENLEVÉ : st.markdown("")
+    # Il créait un espace inutile qui éloignait le bouton !
+
     c_enter = st.container()
     with c_enter:
         col_e1, col_e2, col_e3 = st.columns([1, 2, 1])
@@ -570,6 +572,7 @@ def show_landing():
             if st.button("🚀 Entrer dans l'application de prévision"):
                 st.session_state.show_landing = False
                 st.rerun()
+
 
 # ---------------------------------------------
 # SESSION STATE
