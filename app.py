@@ -649,14 +649,96 @@ selected_var = st.sidebar.selectbox(
 
 var_full_name = VARIABLE_NAMES[selected_var]
 
-time_dim = "valid_time"
-max_time = dataset.dims[time_dim] - 1
+import numpy as np
+import pandas as pd
 
-st.session_state.time_index = st.sidebar.slider(
-    "Temps",
-    0, max_time,
-    st.session_state.time_index
+time_dim = "valid_time"
+times = pd.to_datetime(dataset[time_dim].values)  # tableau de datetimes
+max_time = len(times) - 1
+
+# --- Style calendrier futuriste (version qui matche le thème) ---
+st.sidebar.markdown(
+    """
+    <style>
+    /* Conteneur du date_input */
+    div[data-testid="stDateInput"] {
+        padding-top: 4px;
+    }
+
+    /* Champ de texte du calendrier */
+    div[data-testid="stDateInput"] > div > div > input {
+        background: radial-gradient(circle at top left, rgba(15,23,42,0.98), rgba(17,24,39,0.98));
+        border-radius: 999px;
+        border: 1px solid rgba(129,140,248,0.9);
+        color: #e5e7eb;
+        font-size: 0.85rem;
+        padding: 0.35rem 0.8rem;
+        box-shadow: 0 0 18px rgba(129,140,248,0.55);
+    }
+
+    /* Placeholder */
+    div[data-testid="stDateInput"] > div > div > input::placeholder {
+        color: #9ca3af;
+    }
+
+    /* Icône du calendrier */
+    div[data-testid="stDateInput"] svg {
+        color: #a855f7;
+    }
+
+    /* Label “Date de prévision” */
+    div[data-testid="stDateInput"] label {
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        color: #a5b4fc;
+        font-weight: 600;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
 )
+
+# --- Temps actuel ---
+current_time = times[st.session_state.time_index]
+
+# --- Sélection date ---
+min_date = times[0].date()
+max_date = times[-1].date()
+
+selected_date = st.sidebar.date_input(
+    "📅 Date de prévision",
+    value=current_time.date(),
+    min_value=min_date,
+    max_value=max_date
+)
+
+# --- Heures disponibles pour cette date ---
+mask = times.date == selected_date
+day_times = times[mask]
+
+if len(day_times) == 0:
+    day_times = np.array([current_time])
+
+time_labels = [t.strftime("%H:%M") for t in day_times]
+
+# heure actuelle si possible
+try:
+    default_idx = list(day_times).index(current_time)
+except ValueError:
+    default_idx = 0
+
+selected_label = st.sidebar.selectbox(
+    "⏱️ Heure",
+    time_labels,
+    index=default_idx
+)
+
+selected_time = day_times[time_labels.index(selected_label)]
+
+# --- Mise à jour time_index utilisé par toute l'app ---
+st.session_state.time_index = int(np.where(times == selected_time)[0][0])
+
 
 # Variables pression
 var_dims = dataset[selected_var].dims
