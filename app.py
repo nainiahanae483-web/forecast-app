@@ -57,16 +57,30 @@ def apply_design_preset():
     }
 
     /* ===== GLOBAL BACKGROUND ===== */
-    html, body, [data-testid="stAppViewContainer"] {
-        font-family: "Poppins", "Rajdhani", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    html, body,
+    #root,
+    [data-testid="stApp"],
+    [data-testid="stAppViewContainer"],
+    .main {
+        margin: 0 !important;
+        padding: 0 !important;
+        font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
         background:
-            radial-gradient(circle at 15% 15%, rgba(168,85,247,0.25), transparent 45%),
-            radial-gradient(circle at 85% 20%, rgba(232,121,249,0.22), transparent 50%),
-            radial-gradient(circle at 50% 90%, rgba(139,92,246,0.18), transparent 55%),
-            radial-gradient(circle at 90% 85%, rgba(196,181,253,0.15), transparent 50%),
-            #0a0118;
+            radial-gradient(circle at 0% 0%, rgba(56,189,248,0.16), transparent 55%),
+            radial-gradient(circle at 100% 0%, rgba(244,63,94,0.18), transparent 55%),
+            radial-gradient(circle at 10% 100%, rgba(139,92,246,0.16), transparent 55%),
+            #050816;
+        background-attachment: fixed;
+        background-color: #050816 !important;
         color: var(--text-main);
         overflow-x: hidden;
+    }
+
+    /* Barre du haut (Stop / Deploy) transparente */
+    [data-testid="stHeader"] {
+        background: transparent !important;
+        background-color: transparent !important;
+        box-shadow: none !important;
     }
 
     /* Grille néon animée subtile */
@@ -496,7 +510,7 @@ def load_dataset(path):
 def show_landing():
     st.markdown(
         f"""
-        <div style="min-height: 100vh; display: flex; align-items: center; justify-content: center;">
+        <div style="min-height: 78vh; display: flex; align-items: center; justify-content: center;">
             <div style="max-width: 950px; width: 92%; border-radius: 26px;
                         padding: 2px;
                         background: linear-gradient(135deg, #7b2ff7, #f953c6, #fdee88);
