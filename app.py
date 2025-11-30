@@ -16,108 +16,436 @@ POPUP_BG_BASE64 = "/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJC
 # ---------------------------------------------
 # CONFIGURATION GÉNÉRALE
 # ---------------------------------------------
-st.set_page_config(
-    page_title="🌍 GraphCast Maroc — Visualisation",
-    page_icon="🌤️",
-    layout="wide"
-)
+def main():
+    st.set_page_config(
+        page_title="GraphCast Morocco HD",
+        layout="wide",
+        page_icon="🌦️"
+    )
 
-# 1) Police + CSS globale (sans image permanente)
+    # 👉 Ajoute CETTE LIGNE juste après set_page_config
+    apply_design_preset()
+
+    # ... le reste de ton code main() ne change pas ...
+
+# Police + CSS globale - Thème Néon Violet Futuriste
+import streamlit as st
+
 def apply_design_preset():
     css = """
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        :root{
-            --bg: #050315;
-            --card: rgba(10, 12, 35, 0.96);
-            --text: #e8eaf6;
-            --primary: #c77dff;
-            --gradient: linear-gradient(120deg, #7b2ff7, #f953c6, #fdee88);
-        }
+    /* ============================
+       NEON VIOLET FUTURISTIC THEME
+    ============================= */
 
-        html, body, [data-testid="stAppViewContainer"]{
-            font-family: 'Poppins', sans-serif;
-            background: radial-gradient(circle at 0% 0%, #1d1241 0, #050315 55%);
-            color: var(--text);
-        }
+    :root {
+        --bg-main: #0a0118;
+        --bg-panel: #120828;
+        --bg-card: #1a0d35f0;
+        --border-soft: #2d1b4e;
+        --grid-line: rgba(168, 85, 247, 0.12);
+        --text-main: #f3e8ff;
+        --text-muted: #c4b5fd;
+        --accent: #a855f7;         /* violet principal */
+        --accent-strong: #c084fc;  /* violet clair */
+        --accent-magenta: #e879f9; /* magenta */
+        --accent-cyan: #22d3ee;    /* cyan accent */
+        --radius-lg: 20px;
+        --shadow-soft: 0 20px 60px rgba(139, 92, 246, 0.4);
+        --glow-violet: 0 0 25px rgba(168, 85, 247, 0.6);
+        --glow-magenta: 0 0 30px rgba(232, 121, 249, 0.5);
+    }
 
-        .stSidebar {
-            background: rgba(6, 8, 28, 0.96) !important;
-            border-right: 1px solid rgba(255,255,255,0.12);
-        }
+    /* ===== GLOBAL BACKGROUND ===== */
+    html, body, [data-testid="stAppViewContainer"] {
+        font-family: "Poppins", "Rajdhani", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+        background:
+            radial-gradient(circle at 15% 15%, rgba(168,85,247,0.25), transparent 45%),
+            radial-gradient(circle at 85% 20%, rgba(232,121,249,0.22), transparent 50%),
+            radial-gradient(circle at 50% 90%, rgba(139,92,246,0.18), transparent 55%),
+            radial-gradient(circle at 90% 85%, rgba(196,181,253,0.15), transparent 50%),
+            #0a0118;
+        color: var(--text-main);
+        overflow-x: hidden;
+    }
 
-        .block-container {
-            padding-top: 1.3rem;
-        }
+    /* Grille néon animée subtile */
+    [data-testid="stAppViewContainer"]::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background-image:
+            linear-gradient(to right, var(--grid-line) 1.5px, transparent 1.5px),
+            linear-gradient(to bottom, var(--grid-line) 1.5px, transparent 1.5px);
+        background-size: 50px 50px;
+        opacity: 0.4;
+        pointer-events: none;
+        z-index: 0;
+        animation: gridPulse 8s ease-in-out infinite;
+    }
 
-        .custom-card {
-            background: var(--card);
-            border-radius: 20px;
-            padding: 20px 22px;
-            border: 1px solid rgba(255,255,255,0.12);
-            box-shadow: 0 18px 40px rgba(0,0,0,0.65);
-            backdrop-filter: blur(18px);
-        }
+    @keyframes gridPulse {
+        0%, 100% { opacity: 0.4; }
+        50% { opacity: 0.25; }
+    }
 
-        .gradient-header {
-            background: var(--gradient);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            font-weight: 800;
-            letter-spacing: 0.08em;
-        }
+    /* Effet de lueur flottante */
+    [data-testid="stAppViewContainer"]::after {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background:
+            radial-gradient(circle 800px at var(--mouse-x, 50%) var(--mouse-y, 50%), 
+                rgba(168,85,247,0.15), transparent 70%);
+        pointer-events: none;
+        z-index: 0;
+        transition: opacity 0.3s ease;
+    }
 
-        .stButton > button {
-            background: var(--gradient);
-            border: none;
-            color: white;
-            border-radius: 999px;
-            padding: 0.7rem 1.8rem;
-            font-weight: 600;
-            box-shadow: 0 12px 26px rgba(0,0,0,0.6);
-            transition: all 0.18s ease-out;
-        }
-        .stButton > button:hover {
-            transform: translateY(-2px) scale(1.02);
-            box-shadow: 0 18px 42px rgba(0,0,0,0.75);
-            filter: brightness(1.08);
-        }
+    /* Keep main content above effects */
+    .block-container {
+        position: relative;
+        z-index: 1;
+        padding-top: 2rem;
+    }
 
-        .top-toggle-label {
-            font-size: 0.8rem;
-            text-align: right;
-            color: #e5e5f5;
-            opacity: 0.86;
-            margin-bottom: 0.25rem;
-        }
+    /* ===== SIDEBAR ===== */
+    [data-testid="stSidebar"] {
+        background: 
+            linear-gradient(180deg, rgba(168,85,247,0.08) 0%, transparent 100%),
+            radial-gradient(circle at top, #1a0d35, #0a0118);
+        border-right: 2px solid rgba(168,85,247,0.4);
+        box-shadow: 15px 0 50px rgba(139,92,246,0.5);
+        position: relative;
+    }
 
-        .stTabs [data-baseweb="tab-list"] {
-            gap: 0.5rem;
-        }
-        .stTabs [data-baseweb="tab"] {
-            background-color: rgba(8,10,30,0.9);
-            border-radius: 999px;
-            padding: 0.35rem 1.0rem;
-            border: 1px solid transparent;
-            color: #e2e8f0;
-        }
-        .stTabs [aria-selected="true"] {
-            background: var(--gradient) !important;
-            color: #050315 !important;
-            font-weight: 600 !important;
-            border-color: rgba(255,255,255,0.28) !important;
-        }
+    [data-testid="stSidebar"]::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 2px;
+        height: 100%;
+        background: linear-gradient(180deg, 
+            transparent,
+            rgba(232,121,249,0.8) 30%,
+            rgba(168,85,247,0.8) 50%,
+            rgba(232,121,249,0.8) 70%,
+            transparent
+        );
+        animation: borderGlow 3s ease-in-out infinite;
+    }
+
+    @keyframes borderGlow {
+        0%, 100% { opacity: 0.6; transform: translateY(-20%); }
+        50% { opacity: 1; transform: translateY(20%); }
+    }
+
+    [data-testid="stSidebar"] * {
+        color: var(--text-muted) !important;
+        font-size: 0.92rem;
+    }
+
+    [data-testid="stSidebar"] h2, 
+    [data-testid="stSidebar"] h3 {
+        color: var(--accent-strong) !important;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        text-shadow: var(--glow-violet);
+        font-weight: 700 !important;
+    }
+
+    /* ===== HEADERS ===== */
+    h1, h2 {
+        background: linear-gradient(135deg, #a855f7, #e879f9, #c084fc, #22d3ee);
+        background-size: 200% 200%;
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent !important;
+        font-weight: 900 !important;
+        letter-spacing: 0.06em;
+        text-shadow: var(--glow-violet);
+        animation: gradientShift 6s ease infinite;
+        position: relative;
+    }
+
+    @keyframes gradientShift {
+        0%, 100% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+    }
+
+    h3, h4 {
+        color: var(--accent-strong) !important;
+        font-weight: 700 !important;
+        text-shadow: 0 0 15px rgba(168,85,247,0.4);
+    }
+
+    /* ===== BUTTONS ===== */
+    .stButton > button {
+        background: 
+            linear-gradient(135deg, rgba(168,85,247,0.2), rgba(232,121,249,0.2)),
+            linear-gradient(135deg, #a855f7, #e879f9);
+        border: 2px solid rgba(232,121,249,0.6);
+        color: #ffffff;
+        font-weight: 700;
+        padding: 0.65rem 1.6rem;
+        border-radius: 999px;
+        box-shadow: 
+            0 8px 25px rgba(168,85,247,0.5),
+            inset 0 1px 0 rgba(255,255,255,0.2);
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        font-size: 0.92rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .stButton > button::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(135deg, transparent, rgba(255,255,255,0.3), transparent);
+        transform: translateX(-100%);
+        transition: transform 0.6s;
+    }
+
+    .stButton > button:hover::before {
+        transform: translateX(100%);
+    }
+
+    .stButton > button:hover {
+        transform: translateY(-2px) scale(1.03);
+        box-shadow: 
+            0 15px 40px rgba(168,85,247,0.7),
+            0 0 40px rgba(232,121,249,0.6),
+            inset 0 1px 0 rgba(255,255,255,0.3);
+        border-color: rgba(232,121,249,1);
+        cursor: pointer;
+    }
+
+    .stButton > button:active {
+        transform: translateY(0) scale(0.98);
+        box-shadow: 
+            0 5px 15px rgba(139,92,246,0.8),
+            inset 0 1px 0 rgba(255,255,255,0.2);
+    }
+
+    /* ===== SELECTBOX & INPUTS ===== */
+    .stSelectbox div[data-baseweb="select"] > div {
+        background: 
+            linear-gradient(135deg, rgba(168,85,247,0.15), rgba(139,92,246,0.1)) !important;
+        border-radius: 999px !important;
+        border: 2px solid rgba(168,85,247,0.6) !important;
+        color: var(--text-main) !important;
+        font-size: 0.92rem;
+        box-shadow: 0 4px 20px rgba(139,92,246,0.3);
+        transition: all 0.3s ease;
+    }
+
+    .stSelectbox div[data-baseweb="select"] > div:hover {
+        border-color: rgba(232,121,249,0.8) !important;
+        box-shadow: 0 6px 30px rgba(168,85,247,0.5);
+    }
+
+    .stSelectbox svg {
+        color: var(--accent-magenta) !important;
+        filter: drop-shadow(0 0 8px rgba(232,121,249,0.6));
+    }
+
+    .stTextInput input, .stNumberInput input {
+        background: 
+            linear-gradient(135deg, rgba(168,85,247,0.15), rgba(139,92,246,0.1)) !important;
+        border-radius: 999px !important;
+        border: 2px solid rgba(168,85,247,0.6) !important;
+        color: var(--text-main) !important;
+        font-size: 0.92rem;
+        box-shadow: 0 4px 20px rgba(139,92,246,0.3);
+        transition: all 0.3s ease;
+    }
+
+    .stTextInput input:focus, .stNumberInput input:focus {
+        border-color: rgba(232,121,249,0.9) !important;
+        box-shadow: 
+            0 6px 30px rgba(168,85,247,0.5),
+            0 0 20px rgba(232,121,249,0.4) !important;
+    }
+
+    /* ===== SLIDERS ===== */
+    .stSlider > div > div > div {
+        background: linear-gradient(90deg, #a855f7, #e879f9, #c084fc) !important;
+        box-shadow: 0 0 15px rgba(168,85,247,0.6);
+    }
+
+    .stSlider [role="slider"] {
+        background: radial-gradient(circle, #22d3ee, #06b6d4) !important;
+        box-shadow: 
+            0 0 0 4px rgba(34,211,238,0.3),
+            0 0 20px rgba(34,211,238,0.8);
+        border: 2px solid rgba(255,255,255,0.3);
+    }
+
+    .stSlider [role="slider"]:hover {
+        box-shadow: 
+            0 0 0 6px rgba(34,211,238,0.4),
+            0 0 30px rgba(34,211,238,1);
+    }
+
+    /* ===== TABS ===== */
+    .stTabs [data-baseweb="tab-list"] {
+        background: 
+            linear-gradient(135deg, rgba(168,85,247,0.2), rgba(139,92,246,0.15));
+        border-radius: 999px;
+        padding: 0.4rem;
+        border: 2px solid rgba(168,85,247,0.5);
+        box-shadow: 
+            0 8px 25px rgba(139,92,246,0.4),
+            inset 0 1px 0 rgba(255,255,255,0.1);
+    }
+
+    .stTabs [data-baseweb="tab"] {
+        background: transparent;
+        border-radius: 999px;
+        padding: 0.45rem 1.3rem;
+        color: var(--text-muted);
+        font-size: 0.92rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .stTabs [data-baseweb="tab"]:hover {
+        color: var(--accent-strong);
+        text-shadow: 0 0 10px rgba(168,85,247,0.5);
+    }
+
+    .stTabs [aria-selected="true"] {
+        background: linear-gradient(135deg, #a855f7, #e879f9);
+        color: #ffffff !important;
+        font-weight: 700 !important;
+        box-shadow: 
+            0 8px 25px rgba(168,85,247,0.6),
+            0 0 20px rgba(232,121,249,0.5),
+            inset 0 1px 0 rgba(255,255,255,0.3);
+    }
+
+    /* ===== CUSTOM CARD WRAPPER ===== */
+    .custom-card {
+        background: 
+            radial-gradient(circle at top left, rgba(168,85,247,0.15), transparent 60%), 
+            radial-gradient(circle at bottom right, rgba(232,121,249,0.18), transparent 60%),
+            linear-gradient(135deg, rgba(26,13,53,0.98), rgba(18,8,40,0.95));
+        border-radius: var(--radius-lg);
+        border: 2px solid rgba(168,85,247,0.5);
+        padding: 1.3rem 1.5rem;
+        box-shadow: 
+            var(--shadow-soft),
+            inset 0 1px 0 rgba(255,255,255,0.1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .custom-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: linear-gradient(90deg, 
+            transparent,
+            rgba(232,121,249,0.8) 30%,
+            rgba(168,85,247,0.8) 50%,
+            rgba(232,121,249,0.8) 70%,
+            transparent
+        );
+        animation: shimmer 3s ease-in-out infinite;
+    }
+
+    @keyframes shimmer {
+        0%, 100% { opacity: 0.5; transform: translateX(-100%); }
+        50% { opacity: 1; transform: translateX(100%); }
+    }
+
+    /* ===== METRICS ===== */
+    [data-testid="stMetricValue"] {
+        color: #e879f9;
+        text-shadow: 
+            0 0 20px rgba(232,121,249,0.8),
+            0 0 40px rgba(168,85,247,0.5);
+        font-weight: 800;
+        font-size: 2rem;
+    }
+
+    [data-testid="stMetricLabel"] {
+        color: var(--accent-strong) !important;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        font-size: 0.85rem;
+    }
+
+    /* ===== DATAFRAME ===== */
+    [data-testid="stDataFrame"] {
+        border-radius: 16px;
+        border: 2px solid rgba(168,85,247,0.5);
+        overflow: hidden;
+        box-shadow: 
+            0 15px 50px rgba(139,92,246,0.5),
+            0 0 30px rgba(168,85,247,0.3);
+        background: rgba(26,13,53,0.6);
+    }
+
+    /* ===== SCROLLBAR ===== */
+    ::-webkit-scrollbar {
+        width: 10px;
+        height: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: #0a0118;
+        border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: linear-gradient(135deg, #a855f7, #e879f9);
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(168,85,247,0.6);
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: linear-gradient(135deg, #c084fc, #f0abfc);
+        box-shadow: 0 0 15px rgba(232,121,249,0.8);
+    }
+
+    /* ===== SPINNER / LOADER ===== */
+    .stSpinner > div {
+        border-top-color: var(--accent-magenta) !important;
+        filter: drop-shadow(0 0 10px rgba(232,121,249,0.8));
+    }
+
+    /* ===== EXPANDER ===== */
+    .streamlit-expanderHeader {
+        background: 
+            linear-gradient(135deg, rgba(168,85,247,0.15), rgba(139,92,246,0.1)) !important;
+        border: 2px solid rgba(168,85,247,0.4) !important;
+        border-radius: 12px !important;
+        color: var(--accent-strong) !important;
+        font-weight: 600 !important;
+    }
+
+    .streamlit-expanderHeader:hover {
+        border-color: rgba(232,121,249,0.7) !important;
+        box-shadow: 0 4px 20px rgba(168,85,247,0.4);
+    }
+
     </style>
     """
-    return components.html(css, height=0, width=0)
-
+    st.markdown(css, unsafe_allow_html=True)
 
 try:
     apply_design_preset()
 except Exception:
     pass
-
 # ---------------------------------------------
 # PALETTE TURBO SMOOTH
 # ---------------------------------------------
@@ -610,15 +938,47 @@ st.pydeck_chart(deck, use_container_width=True)
 # ---------------------------------------------
 # TABS (VISU + STATISTIQUES RAPIDES + ANALYSES)
 # ---------------------------------------------
-tab1, tab2, tab3 = st.tabs(["Visualisation", "Statistiques rapides", "Analyses avancées"])
+
+# Titre global stylisé pour la partie 2D
+st.markdown(
+    '<h2 class="gradient-header">📊 Vue 2D & analyses avancées</h2>',
+    unsafe_allow_html=True
+)
+
+# Carte “glassmorphism” autour des onglets 2D
+with st.container():
+    st.markdown('<div class="custom-card">', unsafe_allow_html=True)
+
+    tab1, tab2, tab3 = st.tabs(
+        ["Visualisation", "Statistiques rapides", "Analyses avancées"]
+    )
 
 # ========= TAB 1 : VISUALISATION =========
 with tab1:
-    st.markdown("### 🌍 Carte Plotly détaillée")
+    # Card / popup futuriste autour de toute la section
+    st.markdown(
+        """
+        <div style="
+            max-width: 1180px;
+            margin: 0.5rem auto 1.5rem auto;
+            background: radial-gradient(circle at top left, rgba(122,242,211,0.18), rgba(5,7,18,0.98));
+            border-radius: 26px;
+            padding: 22px 26px 26px 26px;
+            box-shadow: 0 26px 70px rgba(0,0,0,0.95);
+            border: 1px solid rgba(111, 191, 255, 0.45);
+        ">
+        """,
+        unsafe_allow_html=True
+    )
 
-    col_v1, col_v2 = st.columns((2, 1))
+    st.markdown(
+        '<h3 class="gradient-header">🌍 Carte Plotly détaillée</h3>',
+        unsafe_allow_html=True
+    )
 
-    # Carte Plotly
+    col_v1, col_v2 = st.columns((2.1, 1))
+
+    # --- Carte Plotly en mode dark néon ---
     with col_v1:
         fig_geo = px.scatter_geo(
             df,
@@ -627,18 +987,61 @@ with tab1:
             color="value",
             color_continuous_scale="Turbo",
             title=f"{var_full_name} — Vue géographique",
-            template=plotly_template
+            template="plotly_dark"   # on force un template sombre
         )
+
         fig_geo.update_geos(
             fitbounds="locations",
             showcountries=True,
-            projection_type="natural earth"
+            showcoastlines=False,
+            showland=True,
+            landcolor="rgba(14, 20, 48, 1)",   # plus de gris/blanc sur les terres
+            oceancolor="rgba(5, 7, 18, 1)",
+            lakecolor="rgba(5, 7, 18, 1)",
+            projection_type="natural earth",
+            bgcolor="rgba(5, 7, 18, 1)"        # fond de la géo
         )
-        st.plotly_chart(fig_geo, use_container_width=True)
 
-    # Points extrêmes + téléchargement
+        fig_geo.update_layout(
+            paper_bgcolor="rgba(5,7,18,1)",     # fond externe
+            plot_bgcolor="rgba(5,7,18,1)",      # fond de la carte
+            margin=dict(l=0, r=0, t=45, b=0),
+            font=dict(
+                family="Oxanium, system-ui, sans-serif",
+                color="#e8ecff",
+                size=12
+            ),
+            title=dict(
+                font=dict(
+                    family="Orbitron, Oxanium, sans-serif",
+                    size=14,
+                    color="#e8ecff",
+                ),
+                x=0.02,
+                xanchor="left"
+            ),
+            coloraxis_colorbar=dict(
+                title="",
+                tickfont=dict(color="#e8ecff", size=10),
+                bgcolor="rgba(7,10,24,0.98)",
+                thickness=10,
+                outlinewidth=0,
+                bordercolor="rgba(122,242,211,0.7)"
+            )
+        )
+
+        st.plotly_chart(
+            fig_geo,
+            use_container_width=True,
+            config={"displayModeBar": False}
+        )
+
+    # --- Points extrêmes + téléchargement ---
     with col_v2:
-        st.markdown("### 🔎 Points extrêmes")
+        st.markdown(
+            '<h4 class="gradient-header">🔎 Points extrêmes</h4>',
+            unsafe_allow_html=True
+        )
 
         min_rows = df.nsmallest(10, "value")
         max_rows = df.nlargest(10, "value")
@@ -657,208 +1060,239 @@ with tab1:
             mime="text/csv",
         )
 
-# ========= TAB 2 : STATISTIQUES RAPIDES =========
-with tab2:
-    st.markdown("## 📌 Statistiques rapides")
+    # Fermeture du div popup
+    st.markdown("</div>", unsafe_allow_html=True)
 
-    col1, col2, col3, col4 = st.columns(4)
-    col1.metric("Min", f"{df['value'].min():.2f}")
-    col2.metric("Max", f"{df['value'].max():.2f}")
-    col3.metric("Moyenne", f"{df['value'].mean():.2f}")
-    col4.metric("Écart-type", f"{df['value'].std():.2f}")
+    # ========= TAB 2 : STATISTIQUES RAPIDES =========
+    with tab2:
+        st.markdown(
+            '<h3 class="gradient-header">📌 Statistiques rapides</h3>',
+            unsafe_allow_html=True
+        )
 
-    st.markdown("### 📊 Histogramme")
-    fig_hist = px.histogram(
-        df,
-        x="value",
-        nbins=50,
-        title=f"Distribution — {var_full_name}",
-        template=plotly_template
-    )
-    st.plotly_chart(fig_hist, use_container_width=True)
+        col1, col2, col3, col4 = st.columns(4)
+        col1.metric("Min", f"{df['value'].min():.2f}")
+        col2.metric("Max", f"{df['value'].max():.2f}")
+        col3.metric("Moyenne", f"{df['value'].mean():.2f}")
+        col4.metric("Écart-type", f"{df['value'].std():.2f}")
 
-    st.markdown("### 📦 Box-Plot")
-    fig_box = px.box(
-        df,
-        y="value",
-        title=f"Box Plot — {var_full_name}",
-        template=plotly_template
-    )
-    st.plotly_chart(fig_box, use_container_width=True)
-
-    st.markdown("### ⏱️ Série temporelle locale")
-
-    col_lat, col_lon = st.columns(2)
-    lat_sel = col_lat.number_input("Latitude", float(df.lat.min()), float(df.lat.max()), float(mid_lat))
-    lon_sel = col_lon.number_input("Longitude", float(df.lon.min()), float(df.lon.max()), float(mid_lon))
-
-    def get_time_series(ds, var, lat, lon, p):
-        try:
-            da = ds[var]
-
-            if p is not None and "isobaricInhPa" in da.dims:
-                da = da.sel(isobaricInhPa=p)
-
-            da = da.sel(latitude=lat, longitude=lon, method="nearest")
-
-            times = ds["valid_time"].values
-            return pd.DataFrame({
-                "time": pd.to_datetime(times),
-                "value": da.values
-            })
-
-        except Exception:
-            return pd.DataFrame()
-
-    ts = get_time_series(dataset, selected_var, lat_sel, lon_sel, pressure_level)
-
-    if not ts.empty:
-        fig_ts = px.line(
-            ts, x="time", y="value",
-            title="Évolution temporelle",
+        st.markdown("### 📊 Histogramme")
+        fig_hist = px.histogram(
+            df,
+            x="value",
+            nbins=50,
+            title=f"Distribution — {var_full_name}",
             template=plotly_template
         )
-        st.plotly_chart(fig_ts, use_container_width=True)
-    else:
-        st.info("Sélectionnez un point valide dans la zone cartographiée.")
+        st.plotly_chart(fig_hist, use_container_width=True)
 
-# ========= TAB 3 : ANALYSES AVANCÉES =========
-with tab3:
+        st.markdown("### 📦 Box-Plot")
+        fig_box = px.box(
+            df,
+            y="value",
+            title=f"Box Plot — {var_full_name}",
+            template=plotly_template
+        )
+        st.plotly_chart(fig_box, use_container_width=True)
 
-    st.markdown("## 📘 Analyses avancées")
+        st.markdown("### ⏱️ Série temporelle locale")
 
-    # Profil vertical
-    st.markdown("### 🌡️ Profil vertical (pression)")
+        col_lat, col_lon = st.columns(2)
+        lat_sel = col_lat.number_input(
+            "Latitude", float(df.lat.min()), float(df.lat.max()), float(mid_lat)
+        )
+        lon_sel = col_lon.number_input(
+            "Longitude", float(df.lon.min()), float(df.lon.max()), float(mid_lon)
+        )
 
-    if is_pressure_var:
-        colA, colB = st.columns(2)
-        lat_v = colA.number_input("Latitude (profil)", float(df.lat.min()), float(df.lat.max()), float(mid_lat))
-        lon_v = colB.number_input("Longitude (profil)", float(df.lon.min()), float(df.lon.max()), float(mid_lon))
+        def get_time_series(ds, var, lat, lon, p):
+            try:
+                da = ds[var]
 
-        try:
-            da_vert = dataset[selected_var].sel(latitude=lat_v, longitude=lon_v, method="nearest")
-            values_vert = da_vert.isel(valid_time=st.session_state.time_index).values
-            levels_vert = dataset["isobaricInhPa"].values
+                if p is not None and "isobaricInhPa" in da.dims:
+                    da = da.sel(isobaricInhPa=p)
 
-            df_vert = pd.DataFrame({
-                "pressure": levels_vert,
-                "value": values_vert
-            }).sort_values("pressure", ascending=False)
+                da = da.sel(latitude=lat, longitude=lon, method="nearest")
 
-            fig_vert = px.line(
-                df_vert,
-                x="value", y="pressure",
-                title=f"Profil vertical — {var_full_name}",
-                labels={"pressure": "Pression (hPa)", "value": "Valeur"},
+                times = ds["valid_time"].values
+                return pd.DataFrame({
+                    "time": pd.to_datetime(times),
+                    "value": da.values
+                })
+
+            except Exception:
+                return pd.DataFrame()
+
+        ts = get_time_series(dataset, selected_var, lat_sel, lon_sel, pressure_level)
+
+        if not ts.empty:
+            fig_ts = px.line(
+                ts, x="time", y="value",
+                title="Évolution temporelle",
                 template=plotly_template
             )
+            st.plotly_chart(fig_ts, use_container_width=True)
+        else:
+            st.info("Sélectionnez un point valide dans la zone cartographiée.")
 
-            fig_vert.update_yaxes(autorange="reversed")
-            st.plotly_chart(fig_vert, use_container_width=True)
+    # ========= TAB 3 : ANALYSES AVANCÉES =========
+    with tab3:
+
+        st.markdown(
+            '<h3 class="gradient-header">📘 Analyses avancées</h3>',
+            unsafe_allow_html=True
+        )
+
+        # Profil vertical
+        st.markdown("### 🌡️ Profil vertical (pression)")
+
+        if is_pressure_var:
+            colA, colB = st.columns(2)
+            lat_v = colA.number_input(
+                "Latitude (profil)",
+                float(df.lat.min()), float(df.lat.max()), float(mid_lat)
+            )
+            lon_v = colB.number_input(
+                "Longitude (profil)",
+                float(df.lon.min()), float(df.lon.max()), float(mid_lon)
+            )
+
+            try:
+                da_vert = dataset[selected_var].sel(
+                    latitude=lat_v, longitude=lon_v, method="nearest"
+                )
+                values_vert = da_vert.isel(
+                    valid_time=st.session_state.time_index
+                ).values
+                levels_vert = dataset["isobaricInhPa"].values
+
+                df_vert = pd.DataFrame({
+                    "pressure": levels_vert,
+                    "value": values_vert
+                }).sort_values("pressure", ascending=False)
+
+                fig_vert = px.line(
+                    df_vert,
+                    x="value", y="pressure",
+                    title=f"Profil vertical — {var_full_name}",
+                    labels={"pressure": "Pression (hPa)", "value": "Valeur"},
+                    template=plotly_template
+                )
+
+                fig_vert.update_yaxes(autorange="reversed")
+                st.plotly_chart(fig_vert, use_container_width=True)
+
+            except Exception as e:
+                st.error(f"Erreur profil vertical : {e}")
+
+        else:
+            st.info("Pas de niveaux de pression pour cette variable.")
+
+        # Hovmöller
+        st.markdown("### 🕒 Hovmöller (Temps vs Latitude)")
+
+        try:
+            lon_hov = mid_lon
+            da_hov = dataset[selected_var].sel(
+                longitude=lon_hov, method="nearest"
+            )
+
+            if is_pressure_var and pressure_level is not None:
+                da_hov = da_hov.sel(isobaricInhPa=pressure_level)
+
+            hov_vals = da_hov.values
+
+            if is_pressure_var and pressure_level is None and hov_vals.ndim == 3:
+                # shape (time, pressure, lat)
+                hov_vals = hov_vals[:, 0, :]
+
+            times = pd.to_datetime(dataset["valid_time"].values)
+            lats = dataset["latitude"].values
+
+            fig_hov = px.imshow(
+                hov_vals,
+                x=lats,
+                y=times,
+                aspect="auto",
+                color_continuous_scale="Turbo",
+                title=f"Hovmöller — {var_full_name}",
+                template=plotly_template
+            )
+            fig_hov.update_layout(yaxis_title="Temps", xaxis_title="Latitude")
+
+            st.plotly_chart(fig_hov, use_container_width=True)
 
         except Exception as e:
-            st.error(f"Erreur profil vertical : {e}")
+            st.error(f"Erreur Hovmöller : {e}")
 
-    else:
-        st.info("Pas de niveaux de pression pour cette variable.")
+        # Corrélation locale
+        st.markdown("### 🔗 Corrélation locale")
 
-    # Hovmöller
-    st.markdown("### 🕒 Hovmöller (Temps vs Latitude)")
-
-    try:
-        lon_hov = mid_lon
-        da_hov = dataset[selected_var].sel(longitude=lon_hov, method="nearest")
-
-        if is_pressure_var and pressure_level is not None:
-            da_hov = da_hov.sel(isobaricInhPa=pressure_level)
-
-        hov_vals = da_hov.values
-
-        if is_pressure_var and pressure_level is None and hov_vals.ndim == 3:
-            # shape (time, pressure, lat)
-            hov_vals = hov_vals[:, 0, :]
-
-        times = pd.to_datetime(dataset["valid_time"].values)
-        lats = dataset["latitude"].values
-
-        fig_hov = px.imshow(
-            hov_vals,
-            x=lats,
-            y=times,
-            aspect="auto",
-            color_continuous_scale="Turbo",
-            title=f"Hovmöller — {var_full_name}",
-            template=plotly_template
-        )
-        fig_hov.update_layout(yaxis_title="Temps", xaxis_title="Latitude")
-
-        st.plotly_chart(fig_hov, use_container_width=True)
-
-    except Exception as e:
-        st.error(f"Erreur Hovmöller : {e}")
-
-    # Corrélation locale
-    st.markdown("### 🔗 Corrélation locale")
-
-    var_corr = st.selectbox(
-        "Variable avec laquelle corréler",
-        VALID_VARS,
-        format_func=lambda k: VARIABLE_NAMES[k]
-    )
-
-    try:
-        da1 = dataset[selected_var]
-        da2 = dataset[var_corr]
-
-        if "isobaricInhPa" in da1.dims and pressure_level is not None:
-            da1 = da1.sel(isobaricInhPa=pressure_level)
-
-        if "isobaricInhPa" in da2.dims and pressure_level is not None:
-            da2 = da2.sel(isobaricInhPa=pressure_level)
-
-        corr_vals = []
-        for la, lo in zip(df.lat, df.lon):
-            ts1 = da1.sel(latitude=la, longitude=lo, method="nearest").values
-            ts2 = da2.sel(latitude=la, longitude=lo, method="nearest").values
-
-            if np.std(ts1) == 0 or np.std(ts2) == 0:
-                corr_vals.append(np.nan)
-            else:
-                corr_vals.append(np.corrcoef(ts1, ts2)[0, 1])
-
-        df_corr = pd.DataFrame({
-            "lat": df.lat,
-            "lon": df.lon,
-            "corr": corr_vals
-        }).dropna()
-
-        base_layers_corr, map_style_corr = get_basemap_layers_and_style(basemap, dark_mode)
-
-        layer_corr = pdk.Layer(
-            "ScatterplotLayer",
-            data=df_corr,
-            get_position=["lon", "lat"],
-            get_radius=4000,
-            get_fill_color="[255 * (corr+1)/2, 50, 255 * (1-(corr+1)/2), 200]",
-            pickable=True
+        var_corr = st.selectbox(
+            "Variable avec laquelle corréler",
+            VALID_VARS,
+            format_func=lambda k: VARIABLE_NAMES[k]
         )
 
-        layers_corr = base_layers_corr + [layer_corr]
+        try:
+            da1 = dataset[selected_var]
+            da2 = dataset[var_corr]
 
-        deck_corr = pdk.Deck(
-            layers=layers_corr,
-            initial_view_state=view_state,
-            map_style=map_style_corr,
-            tooltip={"html": "<b>Corrélation :</b> {corr}"}
-        )
+            if "isobaricInhPa" in da1.dims and pressure_level is not None:
+                da1 = da1.sel(isobaricInhPa=pressure_level)
 
-        st.pydeck_chart(deck_corr, use_container_width=True)
+            if "isobaricInhPa" in da2.dims and pressure_level is not None:
+                da2 = da2.sel(isobaricInhPa=pressure_level)
 
-    except Exception as e:
-        st.error(f"Erreur corrélation : {e}")
+            corr_vals = []
+            for la, lo in zip(df.lat, df.lon):
+                ts1 = da1.sel(latitude=la, longitude=lo, method="nearest").values
+                ts2 = da2.sel(latitude=la, longitude=lo, method="nearest").values
+
+                if np.std(ts1) == 0 or np.std(ts2) == 0:
+                    corr_vals.append(np.nan)
+                else:
+                    corr_vals.append(np.corrcoef(ts1, ts2)[0, 1])
+
+            df_corr = pd.DataFrame({
+                "lat": df.lat,
+                "lon": df.lon,
+                "corr": corr_vals
+            }).dropna()
+
+            base_layers_corr, map_style_corr = get_basemap_layers_and_style(
+                basemap, dark_mode
+            )
+
+            layer_corr = pdk.Layer(
+                "ScatterplotLayer",
+                data=df_corr,
+                get_position=["lon", "lat"],
+                get_radius=4000,
+                get_fill_color="[255 * (corr+1)/2, 50, 255 * (1-(corr+1)/2), 200]",
+                pickable=True
+            )
+
+            layers_corr = base_layers_corr + [layer_corr]
+
+            deck_corr = pdk.Deck(
+                layers=layers_corr,
+                initial_view_state=view_state,
+                map_style=map_style_corr,
+                tooltip={"html": "<b>Corrélation :</b> {corr}"}
+            )
+
+            st.pydeck_chart(deck_corr, use_container_width=True)
+
+        except Exception as e:
+            st.error(f"Erreur corrélation : {e}")
+
+    # Fermeture de la carte glassmorphism
+    st.markdown('</div>', unsafe_allow_html=True)
 
 # ---------------------------------------------
 # LANCEMENT DE L'ANIMATION SI ACTIVE
 # ---------------------------------------------
 if st.session_state.is_playing and st.session_state.animation_mode != "none":
     run_animation(max_time)
+
