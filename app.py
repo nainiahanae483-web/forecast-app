@@ -510,7 +510,8 @@ def load_dataset(path):
 def show_landing():
     st.markdown(
         f"""
-        <div style="min-height: 78vh; display: flex; align-items: center; justify-content: center;">
+       <div style="min-height: 75vh; height: fit-content;
+            display: flex; align-items: center; justify-content: center;">
             <div style="max-width: 950px; width: 92%; border-radius: 26px;
                         padding: 2px;
                         background: linear-gradient(135deg, #7b2ff7, #f953c6, #fdee88);
