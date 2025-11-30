@@ -510,48 +510,48 @@ def load_dataset(path):
 def show_landing():
     st.markdown(
         f"""
-        <div style="min-height: 75vh; display: flex; align-items: flex-start; justify-content: center; padding-top: 2vh;">
+        <div style="min-height: 60vh; display: flex; align-items: flex-start; justify-content: center; padding-top: 1vh;">
             <div style="max-width: 850px; width: 90%; border-radius: 26px;
                         padding: 2px;
                         background: linear-gradient(135deg, #7b2ff7, #f953c6, #fdee88);
                         box-shadow: 0 24px 60px rgba(0,0,0,0.85);
-                        transform: scale(0.82);
+                        transform: scale(0.80);
                         transform-origin: top center;">
-                <div style="display: flex; flex-direction: row; gap: 22px;
+                <div style="display: flex; flex-direction: row; gap: 18px;
                             background: rgba(5, 3, 21, 0.96);
                             border-radius: 24px;
-                            padding: 22px 24px;
+                            padding: 16px 18px;
                             backdrop-filter: blur(20px);
                             border: 1px solid rgba(255,255,255,0.16);">
-                    <div style="flex: 1.1;
-                                border-radius: 18px;
+                    <div style="flex: 1.05;
+                                border-radius: 16px;
                                 background-image: url('data:image/jpg;base64,{POPUP_BG_BASE64}');
                                 background-size: cover;
                                 background-position: center;
-                                min-height: 220px;
+                                min-height: 180px;
                                 box-shadow: inset 0 0 40px rgba(0,0,0,0.6);">
                     </div>
                     <div style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
-                        <div style="font-size: 0.85rem; letter-spacing: 0.18em;
+                        <div style="font-size: 0.80rem; letter-spacing: 0.16em;
                                     text-transform: uppercase; color: #a5b4fc; margin-bottom: 0.35rem;">
                             Forecast Application Central
                         </div>
-                        <div style="font-size: 1.55rem; font-weight: 800;
+                        <div style="font-size: 1.45rem; font-weight: 800;
                                     background: linear-gradient(120deg,#e0e7ff,#f9a8ff,#facc15);
                                     -webkit-background-clip: text; background-clip: text;
-                                    color: transparent; margin-bottom: 0.6rem;">
+                                    color: transparent; margin-bottom: 0.45rem;">
                             Explore GraphCast Morocco in High Definition
                         </div>
-                        <div style="font-size: 0.92rem; color: #e5e7eb; opacity: 0.92; margin-bottom: 1.1rem;">
+                        <div style="font-size: 0.88rem; color: #e5e7eb; opacity: 0.92; margin-bottom: 0.8rem;">
                             Visualisez les champs météorologiques avancés (vent, pression, température, humidité)
                             sur le Maroc à travers des cartes interactives, des profils verticaux et des analyses temporelles.
                         </div>
-                        <ul style="font-size: 0.83rem; color: #cbd5f5; padding-left: 1.1rem; margin-bottom: 1.1rem;">
+                        <ul style="font-size: 0.78rem; color: #cbd5f5; padding-left: 1rem; margin-bottom: 0.8rem;">
                             <li>Cartes dynamiques (Heatmap, points, hexagones)</li>
                             <li>Profils verticaux par pression et coupes Hovmöller</li>
                             <li>Analyses de corrélation locale entre variables</li>
                         </ul>
-                        <div style="font-size: 0.78rem; color: #9ca3af; margin-bottom: 0.6rem;">
+                        <div style="font-size: 0.74rem; color: #9ca3af; margin-bottom: 0.3rem;">
                             Cliquez sur le bouton ci-dessous pour accéder au tableau de bord complet.
                         </div>
                     </div>
@@ -562,17 +562,14 @@ def show_landing():
         unsafe_allow_html=True
     )
 
-    # ❌ ENLEVÉ : st.markdown("")
-    # Il créait un espace inutile qui éloignait le bouton !
-
+    # BOUTON (directement collé sous la carte)
     c_enter = st.container()
     with c_enter:
-        col_e1, col_e2, col_e3 = st.columns([1, 2, 1])
+        col_e1, col_e2, col_e3 = st.columns([1.2, 1.4, 1.2])
         with col_e2:
             if st.button("🚀 Entrer dans l'application de prévision"):
                 st.session_state.show_landing = False
                 st.rerun()
-
 
 # ---------------------------------------------
 # SESSION STATE
