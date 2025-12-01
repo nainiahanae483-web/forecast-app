@@ -9,14 +9,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 import time
 from datetime import datetime
-import matplotlib.cm as cm
-import matplotlib.colors as mcolors
-import numpy as np
 
-def get_colormap(name, n=256):
-    cmap = cm.get_cmap(name, n)
-    colors = (cmap(np.linspace(0, 1, n))[:, :3] * 255).astype(int)
-    return colors.tolist()
 
 
 # Base64 background image for landing popup
