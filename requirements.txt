@@ -6,4 +6,3 @@ pydeck
 plotly
 netCDF4
 h5netcdf
-matplotlib
